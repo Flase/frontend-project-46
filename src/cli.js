@@ -1,4 +1,7 @@
 import { Command } from 'commander';
+import fs from 'fs';
+import path from 'path';
+import getParsedObj from './jsonParser.js';
 
 const cliStart = () => {
   const program = new Command();
@@ -6,20 +9,20 @@ const cliStart = () => {
     .name('gendiff')
     .description('Compares two configuration files and shows a difference.')
     .version('0.0.1');
-  // .option('-V, --version', 'output the version number')
-  // .option('-h, --help', 'output usage information');
+
   program
     .requiredOption('-f, --format <type>', 'output format')
-    .arguments('filepath1 filepath2');
-  // program.command('split')
-  //   .description('Split a string into substrings and display as an array')
-  //   .argument('<string>', 'string to split')
-  //   .option('--first', 'display just the first substring')
-  //   .option('-s, --separator <char>', 'separator character', ',')
-  //   .action((str, options) => {
-  //     const limit = options.first ? 1 : undefined;
-  //     console.log(str.split(options.separator, limit));
-  //   });
+    .arguments('filepath1 filepath2')
+    .action((filepath1, filepath2) => {
+      const absolutePath1 = path.resolve(process.cwd(), filepath1);
+      const absolutePath2 = path.resolve(process.cwd(), filepath2);
+
+      const fileContent1 = fs.readFileSync(absolutePath1, 'utf-8');
+      const fileContent2 = fs.readFileSync(absolutePath2, 'utf-8');
+
+      console.log(getParsedObj(fileContent1));
+      console.log(getParsedObj(fileContent2));
+    });
 
   program.parse();
 };
