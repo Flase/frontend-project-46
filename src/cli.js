@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import fs from 'fs';
 import path from 'path';
-import { getParsedObj } from './jsonParser.js';
+import { getParsedJsonObj, getParsedYamlObj } from './parsers.js';
 import genDiff from './index.js';
 
 const cliStart = () => {
@@ -18,13 +18,39 @@ const cliStart = () => {
       const absolutePath1 = path.resolve(process.cwd(), filepath1);
       const absolutePath2 = path.resolve(process.cwd(), filepath2);
 
+      const extension1 = path.extname(filepath1);
+      const extension2 = path.extname(filepath2);
+
       const fileContent1 = fs.readFileSync(absolutePath1, 'utf-8');
       const fileContent2 = fs.readFileSync(absolutePath2, 'utf-8');
-      const obj1 = getParsedObj(fileContent1);
-      const obj2 = getParsedObj(fileContent2);
+
+      let obj1; let obj2;
+
+      switch (extension1) {
+        case '.json':
+          obj1 = getParsedJsonObj(fileContent1);
+          break;
+        case '.yaml':
+        case '.yml':
+          obj1 = getParsedYamlObj(fileContent1);
+          break;
+        default:
+          throw new Error(`Unsupported file format: ${extension1}`);
+      }
+
+      switch (extension2) {
+        case '.json':
+          obj2 = getParsedJsonObj(fileContent2);
+          break;
+        case '.yaml':
+        case '.yml':
+          obj2 = getParsedYamlObj(fileContent2);
+          break;
+        default:
+          throw new Error(`Unsupported file format: ${extension2}`);
+      }
+
       console.log(genDiff(obj1, obj2));
-      // console.log(getParsedObj(fileContent1));
-      // console.log(getParsedObj(fileContent2));
     });
 
   program.parse();
