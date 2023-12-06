@@ -8,7 +8,9 @@ const cliStart = () => {
     .version('0.0.1');
   // .option('-V, --version', 'output the version number')
   // .option('-h, --help', 'output usage information');
-
+  program
+    .requiredOption('-f, --format <type>', 'output format')
+    .arguments('filepath1 filepath2');
   // program.command('split')
   //   .description('Split a string into substrings and display as an array')
   //   .argument('<string>', 'string to split')
