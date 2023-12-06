@@ -1,2 +1,5 @@
 const getParsedObj = (string) => JSON.parse(string);
-export default getParsedObj;
+
+const getJSONString = (obj) => JSON.stringify(obj);
+
+export { getParsedObj, getJSONString };
