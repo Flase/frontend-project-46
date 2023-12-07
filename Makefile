@@ -5,5 +5,5 @@ install:
 publish:
 	npm publish --dry-run
 
-brain-games:
+genDiff:
 	node bin/gendiff.js
