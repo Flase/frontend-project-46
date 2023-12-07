@@ -12,7 +12,7 @@ const cliStart = () => {
     .version('0.0.1');
 
   program
-    .requiredOption('-f, --format <type>', 'output format')
+    .requiredOption('-f, --format <type>', 'output format', 'stylish')
     .arguments('filepath1 filepath2')
     .action((filepath1, filepath2) => {
       const absolutePath1 = path.resolve(process.cwd(), filepath1);
@@ -50,9 +50,14 @@ const cliStart = () => {
           throw new Error(`Unsupported file format: ${extension2}`);
       }
 
-      console.log(genDiff(obj1, obj2));
+      switch (program.opts().format) {
+        case 'stylish':
+          console.log(genDiff(obj1, obj2));
+          break;
+        default:
+          break;
+      }
     });
-
   program.parse();
 };
 
